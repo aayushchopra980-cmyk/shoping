@@ -34,3 +34,6 @@ MyShop is a beginner full-stack e-commerce project built using FastAPI, Python, 
 ```text
 index.html
 ```
+## 👨‍💻 Author
+
+Aayush Chopra
