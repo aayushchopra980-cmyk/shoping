@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MyShop Auth</title>
+</head>
+<body>
+
+<h1>🔐 MyShop</h1>
+
+<!-- AUTH -->
+<h3>Signup</h3>
+<input id="su_user" placeholder="Username">
+<input id="su_pass" placeholder="Password">
+<button onclick="signup()">Signup</button>
+
+<h3>Login</h3>
+<input id="li_user" placeholder="Username">
+<input id="li_pass" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<hr>
+
+<!-- PRODUCT -->
+<h3>Add Product</h3>
+<input id="name" placeholder="Name">
+<input id="price" placeholder="Price">
+<input id="category" placeholder="Category">
+<button onclick="addProduct()">Add</button>
+
+<h3>Products</h3>
+<button onclick="loadProducts()">Refresh</button>
+<ul id="products"></ul>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+// SAVE TOKEN
+function saveToken(token) {
+    localStorage.setItem("token", token);
+}
+
+// GET TOKEN
+function getToken() {
+    return localStorage.getItem("token");
+}
+
+// SIGNUP
+async function signup() {
+    await fetch(API + "/signup", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: document.getElementById("su_user").value,
+            password: document.getElementById("su_pass").value
+        })
+    });
+    alert("Signup done!");
+}
+
+// LOGIN
+async function login() {
+    const res = await fetch(API + "/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: document.getElementById("li_user").value,
+            password: document.getElementById("li_pass").value
+        })
+    });
+
+    const data = await res.json();
+    saveToken(data.access_token);
+    alert("Logged in!");
+}
+
+// ADD PRODUCT (WITH TOKEN)
+async function addProduct() {
+    const token = getToken();
+
+    if (!token) {
+        alert("Login first!");
+        return;
+    }
+
+    await fetch(API + "/add-product?token=" + token, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            price: parseInt(document.getElementById("price").value),
+            category: document.getElementById("category").value
+        })
+    });
+
+    loadProducts();
+}
+
+// LOAD PRODUCTS
+async function loadProducts() {
+    const res = await fetch(API + "/products");
+    const data = await res.json();
+
+    const list = document.getElementById("products");
+    list.innerHTML = "";
+
+    data.forEach((p, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            ${p.name} - ₹${p.price}
+            <button onclick="deleteProduct(${i})">Delete</button>
+        `;
+        list.appendChild(li);
+    });
+}
+
+// DELETE PRODUCT
+async function deleteProduct(id) {
+    const token = getToken();
+
+    await fetch(API + "/delete/" + id + "?token=" + token, {
+        method: "DELETE"
+    });
+
+    loadProducts();
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>

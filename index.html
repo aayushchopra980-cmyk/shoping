@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyShop — Great Shopping Experience</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">MyShop</span>
+        <div>
+          <h1>MyShop</h1>
+          <p>Your marketplace for books, stationery, food, gadgets, and deals.</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="nav-pill-row" id="navMenu">
+          <button class="pill active" type="button" data-section="products">Shop</button>
+          <button class="pill" type="button" data-section="cart">Cart <span id="cartCount">0</span></button>
+          <button class="pill" type="button" data-section="wishlist">Wishlist <span id="wishCount">0</span></button>
+        </div>
+        <button id="navToggle" class="nav-toggle" type="button" aria-label="Toggle navigation">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="action-row">
+          <button id="themeToggle" class="ghost" type="button">Dark mode</button>
+          <div class="auth-panel">
+            <span id="authStatus">Not logged in</span>
+            <button id="logoutBtn" class="secondary hidden" type="button">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero panel">
+      <div>
+        <h2>Shop smarter, faster, and with a polished experience.</h2>
+        <p>Sign in, publish products, browse categories, fill your cart, save wishlist items, and manage your store.</p>
+        <div class="hero-actions">
+          <button class="pill" type="button" onclick="showSection('products')">Browse deals</button>
+          <button class="ghost" type="button" onclick="showSection('wishlist')">Saved items</button>
+        </div>
+      </div>
+      <div class="hero-badges">
+        <div class="badge">Fast checkout</div>
+        <div class="badge">Live product updates</div>
+        <div class="badge">Mobile + TV ready</div>
+      </div>
+    </section>
+
+    <section class="panel suggestions-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Suggested for you</h2>
+          <p>Top picks, trending categories, and recent launches in one place.</p>
+        </div>
+      </div>
+      <div id="suggestions" class="suggestion-grid"></div>
+    </section>
+
+    <section class="panel grid-2">
+      <div class="auth-box">
+        <h2>Login / Signup</h2>
+        <div class="auth-grid">
+          <div class="auth-card">
+            <h3>Signup</h3>
+            <input id="su_user" placeholder="Username" autocomplete="username" />
+            <input id="su_pass" type="password" placeholder="Password" autocomplete="new-password" />
+            <button onclick="signup()">Create account</button>
+          </div>
+          <div class="auth-card">
+            <h3>Login</h3>
+            <input id="li_user" placeholder="Username" autocomplete="username" />
+            <input id="li_pass" type="password" placeholder="Password" autocomplete="current-password" />
+            <button onclick="login()">Login</button>
+          </div>
+        </div>
+      </div>
+      <div class="auth-box">
+        <h2>Publish Product</h2>
+        <div class="form-grid">
+          <input id="name" placeholder="Product name" />
+          <input id="price" type="number" min="1" placeholder="Price" />
+          <input id="category" placeholder="Category" />
+          <textarea id="description" placeholder="Description"></textarea>
+          <button onclick="addProduct()">Publish product</button>
+        </div>
+        <p class="hint">Only logged-in users can add and delete their own products.</p>
+      </div>
+    </section>
+
+    <section id="productsSection" class="panel">
+      <div class="toolbar">
+        <div class="filters">
+          <input id="searchInput" placeholder="Search products..." aria-label="Search products" />
+          <select id="categoryFilter" onchange="filterProducts()">
+            <option value="">All categories</option>
+          </select>
+          <select id="sortSelect" class="sort-control" onchange="filterProducts()">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="category">Sort by category</option>
+          </select>
+        </div>
+        <button onclick="loadProducts()">Refresh</button>
+      </div>
+      <div id="products" class="product-grid"></div>
+    </section>
+
+    <section id="cartSection" class="panel hidden">
+      <div class="panel-header">
+        <h2>Your Cart</h2>
+        <button class="ghost small" onclick="clearCart()">Clear cart</button>
+      </div>
+      <div id="cartItems" class="bag-list"></div>
+      <div id="cartSummary" class="summary"></div>
+    </section>
+
+    <section id="wishlistSection" class="panel hidden">
+      <div class="panel-header">
+        <h2>Your Wishlist</h2>
+        <button class="ghost small" onclick="clearWishlist()">Clear wishlist</button>
+      </div>
+      <div id="wishlistItems" class="bag-list"></div>
+    </section>
+
+    <div id="productModal" class="modal hidden">
+      <div class="modal-card">
+        <button class="close-btn" onclick="hideModal()">×</button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <footer class="footer">Built with FastAPI and plain JavaScript. This demo supports auth, product publishing, product delete, cart, wishlist, and search.</footer>
+  </div>
+  <script src="/static/script.js"></script>
+</body>
+</html>
